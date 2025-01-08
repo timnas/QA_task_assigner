@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Task Assigner</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Team members and devices
+        const teamMembers = ["Alice", "Bob", "Charlie", "David"];
+        const devices = ["Device A", "Device B", "Device C", "Device D"];
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function generateAssignments() {
+            const shuffledMembers = shuffle([...teamMembers]);
+            const shuffledDevices = shuffle([...devices]);
+            const assignments = shuffledMembers.map((member, index) => {
+                return `${member} -> ${shuffledDevices[index % shuffledDevices.length]}`;
+            });
+
+            // Update UI
+            const assignmentList = document.getElementById('assignment-list');
+            assignmentList.innerHTML = assignments.map(assignment => `<li>${assignment}</li>`).join('');
+        }
+
+        function postToTrello() {
+            const assignments = document.querySelectorAll('#assignment-list li');
+            const assignmentTexts = Array.from(assignments).map(li => li.textContent);
+
+            const apiKey = "YOUR_TRELLO_API_KEY";
+            const token = "YOUR_TRELLO_API_TOKEN";
+            const boardId = "YOUR_BOARD_ID";
+
+            assignmentTexts.forEach(assignment => {
+                fetch(`https://api.trello.com/1/cards?key=${apiKey}&token=${token}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: assignment,
+                        idList: "YOUR_LIST_ID" // Replace with the Trello list ID
+                    })
+                })
+                .then(response => response.json())
+                .then(data => console.log('Posted to Trello:', data))
+                .catch(error => console.error('Error posting to Trello:', error));
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>QA Task Assigner</h1>
+    <button onclick="generateAssignments()">Generate Assignments</button>
+    <button onclick="postToTrello()">Post to Trello</button>
+    <ul id="assignment-list"></ul>
+</body>
+</html>
