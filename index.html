@@ -1,61 +1,909 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA Task Assigner</title>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CQAO</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        background: linear-gradient(to bottom right, #f9f9f9, #ece9e6);
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        margin-top: 20px;
+        /* font-size: 2.5em;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); */
+        text-align: center;
+      }
+
+      .container {
+        margin: 30px auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        max-width: 600px;
+      }
+
+      button {
+        background: linear-gradient(45deg, #5d5c31, #5d5c31);
+        color: #fff;
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease-in-out;
+      }
+
+      button:hover {
+        background: #adab28;
+        transform: scale(1.1);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      button:active {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      button.disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+        font-size: 2em;
+        color: #f9f9f9;
+      }
+
+      li {
+        background: #f9f9f9;
+        margin: 10px 0;
+        padding: 10px 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 1.2em;
+        color: #333;
+      }
+
+      li:nth-child(even) {
+        background: #eef2f3;
+      }
+
+      footer {
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #fff;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.3s;
+      }
+
+      .modal-overlay.active {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .modal {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .modal h3 {
+        margin-top: 0;
+      }
+
+      .modal input {
+        width: calc(100% - 20px);
+        margin-bottom: 10px;
+      }
+
+      .modal button {
+        margin-top: 10px;
+        background: #007bff;
+        color: white;
+      }
+
+      .modal button:hover {
+        background: #0056b3;
+      }
+
+      .soon-bubble {
+        position: absolute;
+        top: 0px;
+        right: -10px;
+        background: #ff5722;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        animation: pulse 1.5s infinite;
+      }
+      .cat {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url("cat.png"); /* Ensure this points to your cat image */
+        background-size: cover;
+        animation: moveCat 10s linear infinite;
+        z-index: 1000;
+      }
+      .nyan-cat {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background-image: url("nyan-cat.png"); /* Replace with your Nyan Cat image */
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        transform: scaleX(1); /* Initially facing right */
+        z-index: 1000;
+      }
+
+      .rainbow-trail {
+        position: absolute;
+        height: 30px;
+        width: 200px;
+        background: linear-gradient(
+          to right,
+          red,
+          orange,
+          yellow,
+          green,
+          blue,
+          indigo,
+          violet
+        );
+        border-radius: 10px;
+        opacity: 0.8;
+        animation: nyanTrail 8s linear infinite;
+        z-index: 999;
+      }
+
+      body {
+        background: radial-gradient(circle, #000428, #004e92);
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .star {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px white;
+        animation: twinkle 2s infinite;
+      }
+
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes nyanMove {
+        0% {
+          transform: translate(-200px, 40vh);
+        }
+        50% {
+          transform: translate(80vw, 50vh);
+        }
+        100% {
+          transform: translate(-200px, 60vh);
+        }
+      }
+
+      @keyframes nyanTrail {
+        0% {
+          transform: translateX(-200px) translateY(50vh);
+        }
+        50% {
+          transform: translateX(78vw) translateY(40vh);
+        }
+        100% {
+          transform: translateX(-200px) translateY(60vh);
+        }
+      }
+
+      @keyframes moveCat {
+        0% {
+          transform: translateX(-100px);
+        }
+        50% {
+          transform: translateX(80vw) translateY(20px);
+        }
+        100% {
+          transform: translateX(-100px);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+    </style>
     <script>
-        // Team members and devices
-        const teamMembers = ["Alice", "Bob", "Charlie", "David"];
-        const devices = ["Device A", "Device B", "Device C", "Device D"];
+      let teamMembers = [
+        "Tomer",
+        "Dor",
+        "Anthony",
+        "Andrey",
+        "May",
+        "Andrey",
+        "Amir",
+        "Timna",
+      ];
+      let devices = ["iOS", "Android", "PC", "Tablet"];
+      let presentTeamMembers = [...teamMembers];
+      let deviceRestrictions = {};
 
-        function shuffle(array) {
-            return array.sort(() => Math.random() - 0.5);
+      function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+      }
+      function generateAssignments() {
+        const shuffledMembers = shuffle([...presentTeamMembers]);
+        const assignments = {};
+        const devicesCopy = [...devices];
+        const unassignedDevices = [];
+
+        // Step 1: Assign each device to a different person
+        devicesCopy.forEach((device) => {
+          const member = shuffledMembers.find((m) =>
+            deviceRestrictions[m]
+              ? deviceRestrictions[m][device] !== false
+              : true
+          );
+          if (member) {
+            if (!assignments[member]) assignments[member] = [];
+            assignments[member].push(device);
+            shuffledMembers.splice(shuffledMembers.indexOf(member), 1);
+          } else {
+            unassignedDevices.push(device); // Devices without an eligible member
+          }
+        });
+
+        // Step 2: Distribute unassigned devices fairly
+        const remainingMembers = [...presentTeamMembers];
+        unassignedDevices.forEach((device) => {
+          const eligibleMembers = remainingMembers.filter((m) =>
+            deviceRestrictions[m]
+              ? deviceRestrictions[m][device] !== false
+              : true
+          );
+
+          if (eligibleMembers.length > 0) {
+            const member = eligibleMembers.shift();
+            if (!assignments[member]) assignments[member] = [];
+            assignments[member].push(device);
+
+            if (!assignments[member])
+              remainingMembers.splice(remainingMembers.indexOf(member), 1);
+          }
+        });
+
+        // Step 3: Ensure all members have at least one device
+        remainingMembers.forEach((member) => {
+          if (!assignments[member]) {
+            const fallbackDevice = devices.find((device) =>
+              deviceRestrictions[member]
+                ? deviceRestrictions[member][device] !== false
+                : true
+            );
+            if (fallbackDevice) {
+              assignments[member] = [fallbackDevice];
+            }
+          }
+        });
+
+        // Step 4: Distribute extra devices fairly to balance workload
+        const membersWithFewDevices = Object.keys(assignments).filter(
+          (member) =>
+            assignments[member].length <
+            Math.ceil(devices.length / presentTeamMembers.length)
+        );
+
+        while (unassignedDevices.length > 0) {
+          const device = unassignedDevices.shift();
+          const member = membersWithFewDevices.find((m) =>
+            deviceRestrictions[m]
+              ? deviceRestrictions[m][device] !== false
+              : true
+          );
+
+          if (member) {
+            assignments[member].push(device);
+          }
         }
 
-        function generateAssignments() {
-            const shuffledMembers = shuffle([...teamMembers]);
-            const shuffledDevices = shuffle([...devices]);
-            const assignments = shuffledMembers.map((member, index) => {
-                return `${member} -> ${shuffledDevices[index % shuffledDevices.length]}`;
-            });
+        // Convert assignments to HTML rows
+        const assignmentList = document.getElementById("assignment-list");
+        assignmentList.innerHTML = Object.entries(assignments)
+          .map(([member, devices]) => {
+            return `<div><strong>${member}</strong>: ${devices.join(
+              ", "
+            )}</div>`;
+          })
+          .join("");
 
-            // Update UI
-            const assignmentList = document.getElementById('assignment-list');
-            assignmentList.innerHTML = assignments.map(assignment => `<li>${assignment}</li>`).join('');
+        // Show action buttons
+        document.getElementById("action-buttons").style.display = "block";
+      }
+
+      function copyAssignments() {
+        const assignments = Array.from(
+          document.querySelectorAll("#assignment-list li")
+        ).map((li) => li.textContent);
+
+        const assignmentsText = `Today's QA:\n\n${assignments.join("\n")}`;
+        navigator.clipboard
+          .writeText(assignmentsText)
+          .then(() => alert("Assignments copied to clipboard!"))
+          .catch((err) => console.error("Failed to copy: ", err));
+      }
+
+      function sendToTrello() {
+        const assignments = Array.from(
+          document.querySelectorAll("#assignment-list li")
+        ).map((li) => li.textContent);
+
+        const apiKey = "YOUR_TRELLO_API_KEY"; // Replace with your API key
+        const token = "YOUR_TRELLO_API_TOKEN"; // Replace with your token
+        const listId = "YOUR_TRELLO_LIST_ID"; // Replace with your Trello list ID
+
+        assignments.forEach((assignment) => {
+          fetch(`https://api.trello.com/1/cards?key=${apiKey}&token=${token}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: assignment,
+              idList: listId,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => console.log("Posted to Trello:", data))
+            .catch((error) => console.error("Error posting to Trello:", error));
+        });
+
+        alert("Assignments sent to Trello!");
+      }
+
+      function openModal(modalId) {
+        document.getElementById(modalId).classList.add("active");
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active");
+      }
+
+      function saveSettings() {
+        const newTeamMembers = document
+          .getElementById("team-members")
+          .value.split(",")
+          .map((member) => member.trim())
+          .filter((member) => member);
+        const newDevices = document
+          .getElementById("devices")
+          .value.split(",")
+          .map((device) => device.trim())
+          .filter((device) => device);
+        const restrictionsInput = document.getElementById(
+          "device-restrictions"
+        ).value;
+
+        teamMembers = newTeamMembers;
+        devices = newDevices;
+
+        deviceRestrictions = {};
+        restrictionsInput.split("\n").forEach((line) => {
+          const [device, member] = line.split("->").map((item) => item.trim());
+          if (device && member) {
+            deviceRestrictions[device] = member;
+          }
+        });
+
+        alert("Settings saved successfully!");
+        closeModal("settings-modal");
+        updateAttendanceList();
+      }
+
+      function updateAttendanceList() {
+        const attendanceContainer = document.getElementById("attendance-list");
+        attendanceContainer.innerHTML = "";
+
+        // Ensure all team members are marked present by default
+        presentTeamMembers = [...teamMembers]; // Set presentTeamMembers to all teamMembers
+
+        teamMembers.forEach((member) => {
+          const isChecked = "checked"; // Default all checkboxes to checked
+          const checkbox = `<label><input type="checkbox" value="${member}" ${isChecked} onchange="toggleAttendance(this)"> ${member}</label><br>`;
+          attendanceContainer.innerHTML += checkbox;
+        });
+      }
+
+      function toggleAttendance(checkbox) {
+        const member = checkbox.value;
+        if (checkbox.checked) {
+          presentTeamMembers.push(member);
+        } else {
+          presentTeamMembers = presentTeamMembers.filter((m) => m !== member);
         }
+      }
+      function generateStars() {
+        const starCount = 50;
 
-        function postToTrello() {
-            const assignments = document.querySelectorAll('#assignment-list li');
-            const assignmentTexts = Array.from(assignments).map(li => li.textContent);
-
-            const apiKey = "YOUR_TRELLO_API_KEY";
-            const token = "YOUR_TRELLO_API_TOKEN";
-            const boardId = "YOUR_BOARD_ID";
-
-            assignmentTexts.forEach(assignment => {
-                fetch(`https://api.trello.com/1/cards?key=${apiKey}&token=${token}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: assignment,
-                        idList: "YOUR_LIST_ID" // Replace with the Trello list ID
-                    })
-                })
-                .then(response => response.json())
-                .then(data => console.log('Posted to Trello:', data))
-                .catch(error => console.error('Error posting to Trello:', error));
-            });
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement("div");
+          star.className = "star";
+          star.style.left = `${Math.random() * 100}vw`;
+          star.style.top = `${Math.random() * 100}vh`;
+          star.style.animationDelay = `${Math.random() * 5}s`;
+          document.body.appendChild(star);
         }
+      }
     </script>
-</head>
-<body>
-    <h1>QA Task Assigner</h1>
-    <button onclick="generateAssignments()">Generate Assignments</button>
-    <button onclick="postToTrello()">Post to Trello</button>
-    <ul id="assignment-list"></ul>
-</body>
+  </head>
+  <body
+    style="
+      background: linear-gradient(to bottom right, #8c2b32, #b83942);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Lora', serif;
+    "
+  >
+    <h1
+      style="
+        color: #e8e8e8;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        font-family: 'Lora', serif;
+        font-size: 3em;
+      "
+    >
+      CQAO
+    </h1>
+
+    <div
+      class="container"
+      style="
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+      "
+    >
+      <button onclick="generateAssignments()" class="luxury-button">
+        Generate Assignments
+      </button>
+      <button onclick="openModal('settings-modal')" class="luxury-button">
+        Settings
+      </button>
+      <button onclick="openModal('attendance-modal')" class="luxury-button">
+        Attendance
+      </button>
+
+      <ul id="assignment-list"></ul>
+      <div id="action-buttons" style="display: none; margin-top: 10px">
+        <button id="send-to-skype-btn" onclick="sendSkypeMessage()">
+          Open Skype
+        </button>
+        <button id="copy-btn" onclick="copyAssignments()">Copy</button>
+        <div style="position: relative; display: inline-block">
+          <button id="send-to-trello-btn" class="disabled">
+            Send to Trello
+          </button>
+          <span class="soon-bubble">Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+      <div class="modal" style="max-width: 80%; overflow-y: auto">
+        <h3>Team Settings</h3>
+        <div
+          id="team-settings-list"
+          style="
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+          "
+        >
+          <!-- Team member boxes will be dynamically generated here -->
+        </div>
+        <button
+          onclick="addTeamMemberBox()"
+          style="
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+          "
+        >
+          Add Member
+        </button>
+        <br /><br />
+        <button
+          onclick="saveSettings()"
+          style="
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+          "
+        >
+          Save
+        </button>
+        <button
+          onclick="closeModal('settings-modal')"
+          style="
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+          "
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div id="attendance-modal" class="modal-overlay">
+      <div class="modal">
+        <h3>Mark Attendance</h3>
+        <div
+          id="attendance-list"
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+          "
+        >
+          <!-- Attendance boxes will be dynamically generated here -->
+        </div>
+        <button
+          onclick="closeModal('attendance-modal')"
+          style="
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+          "
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <footer style="color: white; text-shadow: 0 0 5px white">
+      &copy; 2025 QA Task Assigner. All rights reserved.
+    </footer>
+
+    <script>
+      function addNyanCatAnimation() {
+        const body = document.querySelector("body");
+
+        // Create rainbow trail
+        const rainbowTrail = document.createElement("div");
+        rainbowTrail.className = "rainbow-trail";
+
+        // Create nyan cat
+        const nyanCat = document.createElement("div");
+        nyanCat.className = "nyan-cat";
+
+        // Append elements to the body
+        body.appendChild(rainbowTrail);
+        body.appendChild(nyanCat);
+
+        // Remove elements after animation ends
+        setTimeout(() => {
+          body.removeChild(rainbowTrail);
+          body.removeChild(nyanCat);
+        }, 8000); // Matches the animation duration
+      }
+
+      // Trigger a new Nyan Cat every 5 seconds
+      //   setInterval(addNyanCatAnimation, 5000);
+
+      function addCatAnimation() {
+        const body = document.querySelector("body");
+        const cat = document.createElement("div");
+        cat.className = "cat";
+
+        // Randomize the vertical position
+        cat.style.top = `${Math.random() * 80 + 10}vh`;
+
+        body.appendChild(cat);
+
+        // Remove cat after the animation ends
+        setTimeout(() => {
+          body.removeChild(cat);
+        }, 10000); // Matches animation duration
+      }
+
+      // Add a new cat every 3 seconds
+      //   setInterval(addCatAnimation, 3000);
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAttendanceList();
+        populateTeamSettings();
+        generateStars(); // This ensures stars are created when the page loads
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAttendanceList();
+        populateTeamSettings();
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        // Create the Nyan Cat element
+        const nyanCat = document.createElement("div");
+        nyanCat.className = "nyan-cat";
+        document.body.appendChild(nyanCat);
+
+        let positionX = 0; // Initial horizontal position
+        let positionY = window.innerHeight / 2; // Initial vertical position
+        let directionX = 1; // 1 means moving right, -1 means moving left
+        let directionY = 1; // 1 means moving down, -1 means moving up
+        let stepSizeX = 3; // Speed of horizontal movement
+        let stepSizeY = 3; // Speed of vertical movement
+        let bounceStep = 0; // Step for oscillation movement
+        const bounceAmplitude = 3; // Amplitude of oscillation
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        function moveNyanCat() {
+          // Update horizontal and vertical positions
+          positionX += stepSizeX * directionX;
+          positionY += stepSizeY * directionY;
+
+          // Add oscillating up-and-down movement
+          bounceStep += 0.1; // Adjust this for oscillation speed
+          positionY += Math.sin(bounceStep) * bounceAmplitude;
+
+          // Check for collision with horizontal edges
+          if (
+            positionX <= 0 ||
+            positionX + nyanCat.offsetWidth >= screenWidth
+          ) {
+            directionX *= -1; // Reverse horizontal direction
+            nyanCat.style.transform = `scaleX(${directionX})`; // Mirror image
+          }
+
+          // Check for collision with vertical edges
+          if (
+            positionY <= 0 ||
+            positionY + nyanCat.offsetHeight >= screenHeight
+          ) {
+            directionY *= -1; // Reverse vertical direction
+          }
+
+          // Update Nyan Cat position
+          nyanCat.style.left = `${positionX}px`;
+          nyanCat.style.top = `${positionY}px`;
+
+          // Continue animation
+          requestAnimationFrame(moveNyanCat);
+        }
+
+        // Initialize Nyan Cat position
+        nyanCat.style.position = "absolute";
+        nyanCat.style.left = `${positionX}px`;
+        nyanCat.style.top = `${positionY}px`;
+
+        // Start animation
+        moveNyanCat();
+      });
+
+      function openSkypeApp() {
+        const skypeURL = "skype:zOJx9G2cGJig!";
+        window.open(skypeURL, "_self");
+      }
+
+      function updateAttendanceList() {
+        const attendanceContainer = document.getElementById("attendance-list");
+        attendanceContainer.innerHTML = "";
+
+        teamMembers.forEach((member) => {
+          const memberBox = document.createElement("div");
+          memberBox.className = "attendance-member-box";
+          memberBox.style = `
+                width: 100px;
+                height: 20px;
+                text-align: center;
+                border: 2px solid ${
+                  presentTeamMembers.includes(member) ? "#4caf50" : "#ddd"
+                };
+                border-radius: 10px;
+                background: ${
+                  presentTeamMembers.includes(member) ? "#eaffea" : "#ccc"
+                };
+                color: ${presentTeamMembers.includes(member) ? "#000" : "#666"};
+                padding: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+          memberBox.textContent = member;
+
+          if (!presentTeamMembers.includes(member)) {
+            memberBox.style.background = "#ccc";
+            memberBox.style.color = "#666";
+          }
+
+          memberBox.onclick = () => {
+            if (presentTeamMembers.includes(member)) {
+              presentTeamMembers = presentTeamMembers.filter(
+                (m) => m !== member
+              );
+              memberBox.style.background = "#ccc";
+              memberBox.style.color = "#666";
+            } else {
+              presentTeamMembers.push(member);
+              memberBox.style.background = "#fefefe";
+              memberBox.style.color = "#000";
+            }
+          };
+
+          attendanceContainer.appendChild(memberBox);
+        });
+      }
+
+      function populateTeamSettings() {
+        const teamSettingsList = document.getElementById("team-settings-list");
+        teamSettingsList.innerHTML = "";
+
+        teamMembers.forEach((member, index) => {
+          const memberBox = document.createElement("div");
+          memberBox.className = "team-member-box";
+          memberBox.style =
+            "width: 150px; text-align: center; border: 1px solid #ddd; border-radius: 8px; background: #fefefe; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);";
+
+          const nameInput = document.createElement("input");
+          nameInput.type = "text";
+          nameInput.value = member;
+          nameInput.style =
+            "width: 100%; margin-bottom: 10px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; text-align: center;";
+
+          const removeButton = document.createElement("button");
+          removeButton.textContent = "Remove";
+          removeButton.style =
+            "background-color: #f44336; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em;";
+          removeButton.onclick = () => {
+            teamMembers.splice(index, 1);
+            delete deviceRestrictions[member]; // Remove restrictions for deleted member
+            populateTeamSettings();
+          };
+
+          const restrictionLabel = document.createElement("div");
+          restrictionLabel.textContent = "Devices:";
+          restrictionLabel.style = "font-size: 0.9em; margin-bottom: 5px;";
+
+          const restrictionsContainer = document.createElement("div");
+          restrictionsContainer.style =
+            "display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;";
+
+          const defaultRestrictions =
+            member === "Dor" || member === "Timna"
+              ? ["PC", "Tablet", "iOS"]
+              : ["PC", "Tablet", "Android"];
+
+          // Initialize member's restrictions in deviceRestrictions
+          if (!deviceRestrictions[member]) {
+            deviceRestrictions[member] = {};
+          }
+
+          devices.forEach((device) => {
+            const deviceBox = document.createElement("div");
+            deviceBox.style =
+              "display: flex; align-items: center; gap: 5px; font-size: 0.8em;";
+
+            const deviceCheckbox = document.createElement("input");
+            deviceCheckbox.type = "checkbox";
+            deviceCheckbox.checked = defaultRestrictions.includes(device); // Default checked based on restrictions
+            deviceCheckbox.style = "cursor: pointer;";
+            deviceRestrictions[member][device] = deviceCheckbox.checked; // Set initial restriction
+
+            deviceCheckbox.onchange = () => {
+              deviceRestrictions[member][device] = deviceCheckbox.checked;
+            };
+
+            const deviceLabel = document.createElement("label");
+            deviceLabel.textContent = device;
+
+            deviceBox.appendChild(deviceCheckbox);
+            deviceBox.appendChild(deviceLabel);
+            restrictionsContainer.appendChild(deviceBox);
+          });
+
+          memberBox.appendChild(nameInput);
+          memberBox.appendChild(restrictionLabel);
+          memberBox.appendChild(restrictionsContainer);
+          memberBox.appendChild(removeButton);
+          teamSettingsList.appendChild(memberBox);
+        });
+      }
+
+      function addTeamMemberBox() {
+        teamMembers.push(""); // Add an empty placeholder for a new member
+        populateTeamSettings();
+      }
+      function sendSkypeMessage() {
+        // Collect assignments
+        const assignments = Array.from(
+          document.querySelectorAll("#assignment-list li")
+        ).map((li) => li.textContent);
+
+        const message = `Today's Assignments:\n\n${assignments.join("\n")}`;
+
+        // Copy to clipboard
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+            alert(
+              "Assignments copied to clipboard! Open Skype and paste them."
+            );
+            // Open Skype app to the group chat
+            const skypeURL = "skype:Studio Only!?chat"; // Replace with your group chat name
+            window.location.href = skypeURL;
+          })
+          .catch((err) => {
+            console.error("Failed to copy assignments: ", err);
+            alert("Failed to copy assignments.");
+          });
+      }
+    </script>
+    <audio autoplay loop>
+      <source src="your-audio-file.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+  </body>
 </html>
