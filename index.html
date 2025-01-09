@@ -739,6 +739,33 @@
         nyanCat.style.left = `${positionX}px`;
         nyanCat.style.top = `${positionY}px`;
 
+        // Crash Screen Function
+        function crashScreen() {
+          document.body.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; background: black; color: red; font-size: 3em; text-align: center;">
+                IDIOT :(
+            </div>`;
+          document.body.style.backgroundColor = "black";
+          const fadeOverlay = document.createElement("div");
+          fadeOverlay.style.position = "fixed";
+          fadeOverlay.style.top = 0;
+          fadeOverlay.style.left = 0;
+          fadeOverlay.style.width = "100%";
+          fadeOverlay.style.height = "100%";
+          fadeOverlay.style.background = "black";
+          fadeOverlay.style.opacity = 0;
+          fadeOverlay.style.zIndex = 10000;
+          fadeOverlay.style.transition = "opacity 2s ease";
+          document.body.appendChild(fadeOverlay);
+          // Start the fade-out effect
+          setTimeout(() => {
+            fadeOverlay.style.opacity = 1;
+          }, 10);
+        }
+
+        // Make the Nyan Cat clickable
+        nyanCat.addEventListener("click", crashScreen);
+
         // Start animation
         moveNyanCat();
       });
